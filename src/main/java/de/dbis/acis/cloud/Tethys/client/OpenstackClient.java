@@ -35,19 +35,24 @@ public class OpenstackClient {
 		return cfg;
 	}
 
-	public static LDAPUserInfo verifyAccessToken(String accessToken) {
+	public static ClientResponse verifyAccessToken(String accessToken) {
 		
 		JerseyClient client = JerseyClientBuilder.createClient(returnClientConfig());
 		JerseyWebTarget tokens = client.target(oidcUserinfo);
 	
 		System.out.println("curl -X GET -H 'Authorization: "+accessToken+"' "+oidcUserinfo);
 		ClientResponse response = tokens.request().header("Authorization", accessToken).get(ClientResponse.class);
-
-		LDAPUserInfo output = new LDAPUserInfo();
-		if(response.getStatusInfo()==Status.OK) {
-			output = response.readEntity(LDAPUserInfo.class);
-		}
 	
-		return output;	
+		return response;	
+	}
+	
+	public static LDAPUserInfo verifyAccessToken2(String accessToken) {
+
+		ClientResponse response = verifyAccessToken(accessToken);
+	
+		if(response.getStatusInfo()==Status.OK) {
+			return response.readEntity(LDAPUserInfo.class);
+		}
+		return null;	
 	}
 }

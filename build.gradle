@@ -8,11 +8,8 @@ apply plugin: 'base'
 apply plugin: 'java'
 apply plugin: 'war'
 apply plugin: 'eclipse'
-apply plugin: 'cargo-base'
 
 import org.gradle.api.file.FileCollection
-import org.gradle.api.plugins.cargo.convention.Deployable
-import org.gradle.api.plugins.cargo.tasks.remote.CargoDeployRemote
 import org.apache.tools.ant.filters.ReplaceTokens
 
 task wrapper(type: Wrapper) {
@@ -95,4 +92,19 @@ processResources {
 		filter(ReplaceTokens, tokens: ['swaggerWebApplicationHost': 'localhost'])
 		filter(ReplaceTokens, tokens: ['swaggerWebApplicationPort': '8080'])
 	}
+}
+
+
+task stop(type: Exec) {
+    commandLine "$tomcat_stop"
+}
+
+task start(type: Exec) {
+	commandLine "$tomcat_start"
+}
+
+task deploy(type: Copy) {
+	dependsOn assemble, war
+	from war
+	into tomcat_webapps
 }
