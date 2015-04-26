@@ -1,6 +1,5 @@
 package de.dbis.acis.cloud.Tethys.services;
 
-
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
@@ -13,7 +12,7 @@ import java.nio.file.StandardCopyOption;
 
 import de.dbis.acis.cloud.Tethys.services.interfaces.StorageSI;
 
-public class StorageS implements StorageSI{
+public class LocalStorageS implements StorageSI{
 
 	private final static String storageRoot = "/data/";
 

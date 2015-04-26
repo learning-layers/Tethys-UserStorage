@@ -3,7 +3,7 @@ package de.dbis.acis.cloud.Tethys;
 
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 
-import de.dbis.acis.cloud.Tethys.services.StorageS;
+import de.dbis.acis.cloud.Tethys.services.LocalStorageS;
 import de.dbis.acis.cloud.Tethys.services.interfaces.StorageSI;
 
 /**
@@ -19,7 +19,7 @@ public class TethysBinder extends AbstractBinder {
 		//Binding via Factory. In this Case too much overhead.
 		//bindFactory(new ProxyFactory<ProxyKeystoneApi>(ProxyKeystoneApi.class)).to(ProxyKeystoneApi.class);
 		//Binding by Hand. Faster than binding by Factory.
-		bind(new StorageS()).to(StorageSI.class);
+		bind(new LocalStorageS()).to(StorageSI.class);
 	}
 
 }
