@@ -16,7 +16,7 @@ import com.wordnik.swagger.reader.ClassReaders;
 @WebListener
 public class SwaggerJaxrsListener implements ServletContextListener {
 
-	ResourceBundle resourceBundle = ResourceBundle.getBundle("swagger");
+	ResourceBundle swaggerResourceBundle = ResourceBundle.getBundle("swagger");
 
 	@Override
 	public void contextInitialized(ServletContextEvent sce) {
@@ -24,9 +24,9 @@ public class SwaggerJaxrsListener implements ServletContextListener {
 		SwaggerConfig swaggerConfig = new SwaggerConfig();
 		ConfigFactory.setConfig(swaggerConfig);
 		swaggerConfig.setBasePath(
-				"http://"+resourceBundle.getString("swaggerWebApplicationHost")
-				+":"		+resourceBundle.getString("swaggerWebApplicationPort")
-				+"/"		+resourceBundle.getString("swaggerWebApplicationName")
+				"http://"+swaggerResourceBundle.getString("swaggerWebApplicationHost")
+				+":"		+swaggerResourceBundle.getString("swaggerWebApplicationPort")
+				+"/"		+swaggerResourceBundle.getString("swaggerWebApplicationName")
 		);
 		swaggerConfig.setApiVersion("1.0.0");
 		ScannerFactory.setScanner(new DefaultJaxrsScanner());

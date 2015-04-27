@@ -3,9 +3,19 @@ package de.dbis.acis.cloud.Tethys.services;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import javax.inject.Inject;
+
 import de.dbis.acis.cloud.Tethys.services.interfaces.StorageSI;
+import de.dbis.acis.cloud.Tethys.services.proxy.openstack.TempAuthP;
+import de.dbis.acis.cloud.Tethys.services.proxy.openstack.swift.v1.SwiftP;
 
 public class SwiftStorageS implements StorageSI{
+	
+	@Inject
+	SwiftP swift;
+	
+	@Inject
+	TempAuthP tempAuth;
 
 	@Override
 	public void createFile(InputStream is, String path) {

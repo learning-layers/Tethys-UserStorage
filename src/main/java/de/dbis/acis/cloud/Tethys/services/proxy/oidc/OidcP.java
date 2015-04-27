@@ -1,5 +1,5 @@
 package de.dbis.acis.cloud.Tethys.services.proxy.oidc;
 
-public interface ProxyOidcApi {
+public interface OidcP {
 // TODO
 }

@@ -10,13 +10,8 @@ import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.google.gson.JsonObject;
-
-import de.dbis.acis.cloud.Tethys.services.interfaces.StorageSI;
 import de.dbis.acis.cloud.Tethys.util.COPY;
 
 /**
@@ -28,7 +23,7 @@ import de.dbis.acis.cloud.Tethys.util.COPY;
  * @author Gordon Lawrenz <lawrenz@dbis.rwth-aachen.de>
  */
 @Path("/")
-public interface SwiftApiP {
+public interface SwiftP {
 
 	// Accounts
 	
@@ -241,4 +236,5 @@ public interface SwiftApiP {
 			@PathParam("object") String pathToObject,
 			@HeaderParam("X-Auth-Token") String Token
 			);
+	
 }

@@ -11,4 +11,5 @@ public interface StorageSI {
 	void getContent(OutputStream fos, String path);
 	void delete(String path);
 	boolean checkPathExists(String path);
+	
 }

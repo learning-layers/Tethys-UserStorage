@@ -25,7 +25,7 @@ public class RootR {
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
 	public String getRoot() {
-		return "This is the Tethys User Storage API";
+		return "This is the Tethys User Storage API\n";
 	}
 	
 }
