@@ -146,7 +146,7 @@ public interface SwiftP {
 	 */
 	@GET
 	@Path("/v1/​{account}​/​{container}​/​{object}​")
-	public Response downloadAndGetMetadata(
+	public Response getObjectContentAndMetadata(
 			@PathParam("account") String accountName,
 			@PathParam("container") String container,
 			@PathParam("object") String pathToObject,

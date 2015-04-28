@@ -3,6 +3,7 @@ package de.dbis.acis.cloud.Tethys.resource;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.FileAlreadyExistsException;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -19,14 +20,16 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.StreamingOutput;
 
+import org.glassfish.jersey.message.internal.StreamingOutputProvider;
+
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiResponse;
 import com.wordnik.swagger.annotations.ApiResponses;
 
-import de.dbis.acis.cloud.Tethys.client.OpenstackClient;
 import de.dbis.acis.cloud.Tethys.entity.LDAP.LDAPUserInfo;
 import de.dbis.acis.cloud.Tethys.services.interfaces.StorageSI;
+import de.dbis.acis.cloud.Tethys.services.proxy.oidc.OidcP;
 
 
 /**
@@ -38,14 +41,21 @@ import de.dbis.acis.cloud.Tethys.services.interfaces.StorageSI;
 @Api(value="/users/storage", description = "User storage ")
 public class UserStorageR {
 	
-	@Inject
 	private StorageSI storageService;
-	
-	LDAPUserInfo ldapUser = null;
-	
-	final static boolean __debug = false;
+	private OidcP oidcP;
 	
 	/**
+	 * @param storageService
+	 * @param oidcP
+	 */
+	@Inject
+	public UserStorageR(StorageSI storageService, OidcP oidcP) {
+		this.storageService = storageService;
+		this.oidcP = oidcP;
+	}
+	
+	/**
+	 * @param accessToken
 	 * @param path
 	 * @param is
 	 * @return
@@ -60,21 +70,30 @@ public class UserStorageR {
 	} )
 	public Response postFileOrDir(@HeaderParam("Authorization") String accessToken, @PathParam("path") String path, InputStream is) throws IOException {
 
-		if(__debug){
-			if(accessToken == null || accessToken.isEmpty()) {
-				return Response.status(Status.UNAUTHORIZED).build();
-			}
-			ldapUser = OpenstackClient.verifyAccessToken2(accessToken);
-		} else {
-			ldapUser = testUser();
+		if(accessToken == null || accessToken.isEmpty()) {
+			return Response.status(Status.UNAUTHORIZED).build();
 		}
-		if(storageService.checkPathExists(ldapUser.getName() + "/" + path)) {
+		
+		Response proxyResponse = oidcP.verifyAccessToken(accessToken);
+		if(proxyResponse.getStatusInfo()!=Status.OK) {
+			return proxyResponse;
+		}
+		
+		LDAPUserInfo user = (LDAPUserInfo) proxyResponse.getEntity();
+
+		if(!storageService.checkPathExists(user.getName(), path)) {
 			return Response.status(Status.CONFLICT).build();
 		}
 		if(is.available()==0){
-			storageService.createDir(ldapUser.getName() + "/" + path);
+			storageService.createDir(user.getName(), path);
 		} else {
-			storageService.createFile(is, ldapUser.getName() + "/" + path);
+			try {
+				storageService.createFile(is, user.getName(), path);
+			} catch (FileAlreadyExistsException e) {
+				// file already exists! return 409
+				e.printStackTrace();
+				return Response.status(Status.CONFLICT).build();
+			}
 		}
 		
 		return Response.status(Status.CREATED).build();
@@ -82,6 +101,7 @@ public class UserStorageR {
 	}
 	
 	/**
+	 * @param accessToken
 	 * @param path
 	 * @return
 	 * @throws ClassNotFoundException
@@ -93,19 +113,40 @@ public class UserStorageR {
 	@ApiResponses( {
 		@ApiResponse(code = 200, message = "OK")
 	} )
-	public Response getFiles(@HeaderParam("Authorization") String accessToken, @PathParam("path") final String path) throws ClassNotFoundException, IOException{
+	public Response getUserRoot(@HeaderParam("Authorization") String accessToken, @PathParam("path") final String path) {
+		return getFiles(accessToken, path);
+	}
+	
+	/**
+	 * @param accessToken
+	 * @param path
+	 * @return
+	 * @throws ClassNotFoundException
+	 * @throws IOException
+	 */
+	@GET
+	@Path("/{path : .+}")
+	@ApiOperation(value="Get a list of all files in a sub-storage or a file with specified path")
+	@ApiResponses( {
+		@ApiResponse(code = 200, message = "OK")
+	} )
+	public Response getFiles(@HeaderParam("Authorization") String accessToken, @PathParam("path") final String path) {
 
 		StreamingOutput so = null;
-		if(__debug){
-			if(accessToken == null || accessToken.isEmpty()) {
-				return Response.status(Status.UNAUTHORIZED).build();
-			}
-			ldapUser = OpenstackClient.verifyAccessToken2(accessToken);
-		} else {
-			ldapUser = testUser();
+		
+		if(accessToken == null || accessToken.isEmpty()) {
+			return Response.status(Status.UNAUTHORIZED).build();
 		}
+		
+		Response proxyResponse = oidcP.verifyAccessToken(accessToken);
+		if(proxyResponse.getStatusInfo()!=Status.OK) {
+			return proxyResponse;
+		}
+		
+		final LDAPUserInfo user = (LDAPUserInfo) proxyResponse.getEntity();
+		
 		//check if file/dir exists
-		if(!storageService.checkPathExists(ldapUser.getName() + "/" + path)) {
+		if(!storageService.checkPathExists(user.getName(), path)) {
 			return Response.status(Status.NOT_FOUND).build();
 		}
 		//go further and read dir/file
@@ -114,7 +155,7 @@ public class UserStorageR {
 			@Override
 			public void write(OutputStream os) throws IOException,
 					WebApplicationException {
-				storageService.getContent(os, ldapUser.getName() + "/" + path);	
+				storageService.getContent(os, user.getName(), path);	
 			}
 		};
 		return Response.ok(so).build();
@@ -133,20 +174,21 @@ public class UserStorageR {
 	@ApiResponses( {
 		@ApiResponse(code = 200, message = "OK")
 	} )
-	public Response putFile(@HeaderParam("Authorization") String accessToken, @PathParam("path") String path, InputStream is) {
-		
+	public Response putFile(@HeaderParam("Authorization") String accessToken, @PathParam("path") String path, InputStream is) throws IOException {
 
-		if(__debug){
-			if(accessToken == null || accessToken.isEmpty()) {
-				return Response.status(Status.UNAUTHORIZED).build();
-			}
-			ldapUser = OpenstackClient.verifyAccessToken2(accessToken);
-		} else {
-			ldapUser = testUser();
+		if(accessToken == null || accessToken.isEmpty()) {
+			return Response.status(Status.UNAUTHORIZED).build();
 		}
 		
+		Response proxyResponse = oidcP.verifyAccessToken(accessToken);
+		if(proxyResponse.getStatusInfo()!=Status.OK) {
+			return proxyResponse;
+		}
+		
+		LDAPUserInfo user = (LDAPUserInfo) proxyResponse.getEntity();
+		
 		//TODO check if dir with name
-		storageService.overwriteFile(is, ldapUser.getName() + "/" + path);
+		storageService.overwriteFile(is, user.getName(), path);
 		
 		return Response.ok().build();
 		
@@ -157,6 +199,7 @@ public class UserStorageR {
 	 * @param accessToken
 	 * @param path
 	 * @return
+	 * @throws IOException 
 	 */
 	@DELETE
 	@Path("/{path : .+}")
@@ -164,21 +207,23 @@ public class UserStorageR {
 	@ApiResponses( {
 		@ApiResponse(code = 200, message = "OK")
 	} )
-	public Response deleteFileOrDir(@HeaderParam("Authorization") String accessToken, @PathParam("path") String path){
+	public Response deleteFileOrDir(@HeaderParam("Authorization") String accessToken, @PathParam("path") String path) throws IOException{
 		
-		if(__debug){
-			if(accessToken == null || accessToken.isEmpty()) {
-				return Response.status(Status.UNAUTHORIZED).build();
-			}
-			ldapUser = OpenstackClient.verifyAccessToken2(accessToken);
-		} else {
-			ldapUser = testUser();
+		if(accessToken == null || accessToken.isEmpty()) {
+			return Response.status(Status.UNAUTHORIZED).build();
 		}
 		
-		if(!storageService.checkPathExists(ldapUser.getName() + "/" + path)) {
+		Response proxyResponse = oidcP.verifyAccessToken(accessToken);
+		if(proxyResponse.getStatusInfo()!=Status.OK) {
+			return proxyResponse;
+		}
+		
+		LDAPUserInfo user = (LDAPUserInfo) proxyResponse.getEntity();
+		
+		if(!storageService.checkPathExists(user.getName(), path)) {
 			return Response.status(Status.NOT_FOUND).build();
 		}
-		storageService.delete(ldapUser.getName() + "/" + path);
+		storageService.delete(user.getName(), path);
 		
 		return Response.ok().build();
 	}
@@ -191,10 +236,5 @@ public class UserStorageR {
 		
 		return true;
 	}
-	
-	private LDAPUserInfo testUser(){
-		LDAPUserInfo test = new LDAPUserInfo();
-		test.setName("test");
-		return test;
-	}
+
 }
