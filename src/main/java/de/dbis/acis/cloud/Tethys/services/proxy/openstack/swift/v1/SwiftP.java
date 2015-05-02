@@ -2,6 +2,7 @@ package de.dbis.acis.cloud.Tethys.services.proxy.openstack.swift.v1;
 
 import java.io.InputStream;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.HEAD;
@@ -10,6 +11,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import de.dbis.acis.cloud.Tethys.util.COPY;
@@ -22,7 +24,7 @@ import de.dbis.acis.cloud.Tethys.util.COPY;
  * 
  * @author Gordon Lawrenz <lawrenz@dbis.rwth-aachen.de>
  */
-@Path("/")
+@Path("/v1")
 public interface SwiftP {
 
 	// Accounts
@@ -33,7 +35,7 @@ public interface SwiftP {
 	 * @return
 	 */
 	@GET
-	@Path("/v1/​{account}​")
+	@Path("/AUTH_{account}")
 	public Response getAccDetailsAndListContainers(
 			@PathParam("account") String accountName,
 			@HeaderParam("X-Auth-Token") String Token
@@ -45,7 +47,7 @@ public interface SwiftP {
 	 * @return
 	 */
 	@POST
-	@Path("/v1/​{account}​")
+	@Path("/AUTH_{account}")
 	public Response updateMetadata(
 			@PathParam("account") String accountName,
 			@HeaderParam("X-Auth-Token") String Token
@@ -57,7 +59,7 @@ public interface SwiftP {
 	 * @return
 	 */
 	@HEAD
-	@Path("/v1/​{account}​")
+	@Path("/AUTH_{account}")
 	public Response getAccMetadata(
 			@PathParam("account") String accountName,
 			@HeaderParam("X-Auth-Token") String Token
@@ -72,7 +74,7 @@ public interface SwiftP {
 	 * @return
 	 */
 	@GET
-	@Path("/v1/​{account}​/​{container}​")
+	@Path("/AUTH_{account}/{container}")
 	public Response getContainerDetailsAndListObjects(
 			@PathParam("account") String accountName,
 			@PathParam("container") String container,
@@ -86,7 +88,7 @@ public interface SwiftP {
 	 * @return
 	 */
 	@PUT
-	@Path("/v1/​{account}​/​{container}​")
+	@Path("/AUTH_{account}/{container}")
 	public Response createContainer(
 			@PathParam("account") String accountName,
 			@PathParam("container") String container,
@@ -100,7 +102,7 @@ public interface SwiftP {
 	 * @return
 	 */
 	@POST
-	@Path("/v1/​{account}​/​{container}​")
+	@Path("/AUTH_{account}/{container}")
 	public Response udateMetadata(
 			@PathParam("account") String accountName,
 			@PathParam("container") String container,
@@ -114,7 +116,7 @@ public interface SwiftP {
 	 * @return
 	 */
 	@DELETE
-	@Path("/v1/​{account}​/​{container}​")
+	@Path("/AUTH_{account}/{container}")
 	public Response deleteMetadata(
 			@PathParam("account") String accountName,
 			@PathParam("container") String container,
@@ -128,7 +130,7 @@ public interface SwiftP {
 	 * @return
 	 */
 	@HEAD
-	@Path("/v1/​{account}​/​{container}​")
+	@Path("/AUTH_{account}/{container}")
 	public Response getContainerMetadata(
 			@PathParam("account") String accountName,
 			@PathParam("container") String container,
@@ -145,7 +147,7 @@ public interface SwiftP {
 	 * @return
 	 */
 	@GET
-	@Path("/v1/​{account}​/​{container}​/​{object}​")
+	@Path("/AUTH_{account}/{container}/{object}")
 	public Response getObjectContentAndMetadata(
 			@PathParam("account") String accountName,
 			@PathParam("container") String container,
@@ -158,11 +160,12 @@ public interface SwiftP {
 	 * @param container
 	 * @param pathToObject
 	 * @param Token
-	 * @param inputStream
+	 * @param entity
 	 * @return
 	 */
 	@PUT
-	@Path("/v1/​{account}​/​{container}​/​{object}​​")
+	@Path("/AUTH_{account}/{container}/{object}")
+	@Consumes( { MediaType.MULTIPART_FORM_DATA, MediaType.APPLICATION_FORM_URLENCODED } )
 	public Response createOrReplaceObject(
 			@PathParam("account") String accountName,
 			@PathParam("container") String container,
@@ -180,7 +183,7 @@ public interface SwiftP {
 	 * @return
 	 */
 	@COPY
-	@Path("/v1/​{account}​/​{container}​/​{object}​​")
+	@Path("/AUTH_{account}/{container}/{object}")
 	public Response copyObject(
 			@PathParam("account") String accountName,
 			@PathParam("container") String container,
@@ -197,7 +200,7 @@ public interface SwiftP {
 	 * @return
 	 */
 	@POST
-	@Path("/v1/​{account}​/​{container}​​/​{object}​")
+	@Path("/AUTH_{account}/{container}/{object}")
 	public Response udateMetadata(
 			@PathParam("account") String accountName,
 			@PathParam("container") String container,
@@ -213,7 +216,7 @@ public interface SwiftP {
 	 * @return
 	 */
 	@DELETE
-	@Path("/v1/​{account}​/​{container}​/​{object}​​")
+	@Path("/AUTH_{account}/{container}/{object}")
 	public Response deleteObject(
 			@PathParam("account") String accountName,
 			@PathParam("container") String container,
@@ -229,7 +232,7 @@ public interface SwiftP {
 	 * @return
 	 */
 	@HEAD
-	@Path("/v1/​{account}​/​{container}​​/​{object}​")
+	@Path("/AUTH_{account}/{container}/{object}")
 	public Response getObjectMetadata(
 			@PathParam("account") String accountName,
 			@PathParam("container") String container,
