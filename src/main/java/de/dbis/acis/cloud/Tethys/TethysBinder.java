@@ -6,6 +6,8 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
+import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.proxy.WebResourceFactory;
 
 import de.dbis.acis.cloud.Tethys.services.interfaces.StorageSI;
@@ -25,6 +27,7 @@ import de.dbis.acis.cloud.Tethys.util.GsonMessageBodyHandler;
  */
 public class TethysBinder extends AbstractBinder {
 	
+	ClientConfig clientConfig;
 	ResourceBundle configRB = ResourceBundle.getBundle("config");
 	ResourceBundle openstackRB = null;
 	ResourceBundle oidcRB = ResourceBundle.getBundle("oidc");
@@ -34,6 +37,10 @@ public class TethysBinder extends AbstractBinder {
 	 */
 	@Override
 	protected void configure() {
+		clientConfig = new ClientConfig()
+			.property(ClientProperties.SUPPRESS_HTTP_COMPLIANCE_VALIDATION, true)
+			.property(ClientProperties.MOXY_JSON_FEATURE_DISABLE, true)
+			.register(GsonMessageBodyHandler.class); 
 		String storageVariable = configRB.getString("storageType");
 		String authVariable = configRB.getString("authType");
 		System.out.println(storageVariable);
@@ -45,13 +52,14 @@ public class TethysBinder extends AbstractBinder {
 	}
 	
 	/**
+	 * Decides if we use OpenIDConnect or we mock it for test cases
 	 * @param authVariable
 	 */
 	protected void chooseAuth(String authVariable){
 		switch(authVariable){
 			case "OIDC":
 				System.out.println("create OidcP");
-				WebTarget oidcWebTarget = ClientBuilder.newClient().target(oidcRB.getString("oidcURL")).register(GsonMessageBodyHandler.class);
+				WebTarget oidcWebTarget = ClientBuilder.newClient(clientConfig).target(oidcRB.getString("oidcURL"));
 				bind(WebResourceFactory.newResource(OidcP.class, oidcWebTarget)).to(OidcP.class);
 				break;
 				
@@ -66,6 +74,9 @@ public class TethysBinder extends AbstractBinder {
 	}
 
 	/**
+	 * Decides which storage type we use. Currently we have two storage types:
+	 * Local Storage: Stores everything locally. You can specify the Storage Root Path in properties file. 
+	 * Swift Storage: Stores everything in Swift.
 	 * @param storageVariable
 	 */
 	protected void chooseStorage(String storageVariable)  {
@@ -78,8 +89,8 @@ public class TethysBinder extends AbstractBinder {
 				openstackRB = ResourceBundle.getBundle("openstack");
 				String swiftURL = openstackRB.getString("swiftURL");
 				
-				WebTarget tempAuthWebTarget = ClientBuilder.newClient().target(swiftURL).register(GsonMessageBodyHandler.class);
-				WebTarget swiftWebTarget = ClientBuilder.newClient().target(swiftURL).register(GsonMessageBodyHandler.class);
+				WebTarget tempAuthWebTarget = ClientBuilder.newClient(clientConfig).target(swiftURL);
+				WebTarget swiftWebTarget = ClientBuilder.newClient(clientConfig).target(swiftURL);
 				
 				bind(WebResourceFactory.newResource(TempAuthP.class, tempAuthWebTarget)).to(TempAuthP.class);
 				bind(WebResourceFactory.newResource(SwiftP.class, swiftWebTarget)).to(SwiftP.class);
