@@ -17,12 +17,12 @@ public class MockOidcP implements OidcP {
 	
 	@Override
 	public Response verifyAccessToken(String accessToken) {
-		if(configRB.getString("authPW").equals(accessToken)) {
+		if(configRB.getString("authToken").equals(accessToken)) {
 			LDAPUserInfo test = new LDAPUserInfo();
 			test.setName("test");
-			return Response.status(Status.OK).entity(test).build();
+			return Response.status(Status.OK).entity(test).header("Content-Type", "application/json").build();
 		} else {
-			return Response.status(Status.UNAUTHORIZED).header("Content-Type", "application/json").build();
+			return Response.status(Status.UNAUTHORIZED).build();
 		}
 	}
 }
