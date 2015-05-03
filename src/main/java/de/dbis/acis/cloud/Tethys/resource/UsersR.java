@@ -1,9 +1,14 @@
 package de.dbis.acis.cloud.Tethys.resource;
 
+import java.io.IOException;
+import java.util.ResourceBundle;
+
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -15,6 +20,7 @@ import com.wordnik.swagger.annotations.ApiResponse;
 import com.wordnik.swagger.annotations.ApiResponses;
 
 import de.dbis.acis.cloud.Tethys.entity.LDAP.LDAPUserInfo;
+import de.dbis.acis.cloud.Tethys.services.interfaces.StorageSI;
 import de.dbis.acis.cloud.Tethys.services.proxy.oidc.OidcP;
 
 /**
@@ -26,10 +32,17 @@ import de.dbis.acis.cloud.Tethys.services.proxy.oidc.OidcP;
 @Api(value="/users", description = "Operations about users", position = 3)
 public class UsersR {
 
+	private ResourceBundle configRB = ResourceBundle.getBundle("config");
+	private StorageSI storageService;
 	private OidcP oidcP;
 	
+	/**
+	 * @param storageService
+	 * @param oidcP
+	 */
 	@Inject
-	public UsersR(OidcP oidcP) {
+	public UsersR(StorageSI storageService, OidcP oidcP) {
+		this.storageService = storageService;
 		this.oidcP = oidcP;
 	}
 	
@@ -61,4 +74,21 @@ public class UsersR {
 		
 	}
 	
+	@POST
+	@Path("/{userName}")
+	@ApiOperation(value="Creates User with LDAP User Data")
+	@ApiResponses( {
+		@ApiResponse(code = 201, message = "Created"),
+		@ApiResponse(code = 202, message = "Accepted")
+	} )
+	public Response createStorage(@PathParam("userName") String userName, @HeaderParam("X-Admin-Token") String adminToken) throws IOException{
+		
+		if(adminToken == null || !adminToken.equals(configRB.getString("adminToken"))) {
+			return Response.status(Status.UNAUTHORIZED).build();
+		}
+		
+		storageService.createDir(userName, null);
+		
+		return Response.status(Status.CREATED).build();
+	}
 }

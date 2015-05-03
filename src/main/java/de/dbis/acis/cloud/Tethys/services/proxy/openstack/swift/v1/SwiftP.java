@@ -160,7 +160,7 @@ public interface SwiftP {
 	 * @param container
 	 * @param pathToObject
 	 * @param Token
-	 * @param entity
+	 * @param inputStream
 	 * @return
 	 */
 	@PUT
