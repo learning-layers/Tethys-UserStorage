@@ -6,11 +6,11 @@ import java.io.OutputStream;
 
 public interface StorageSI {
 	
-	void createFile(InputStream is, String username, String path) throws IOException;
-	void overwriteFile(InputStream is, String username, String path) throws IOException;
-	void createDir(String username, String path) throws IOException;
-	void getContent(OutputStream fos, String username, String path) throws IOException;
-	void delete(String username, String path) throws IOException;
-	boolean checkPathExists(String username, String path);
+	void createFile(InputStream is, String oidcUserName, String pathToFile) throws IOException;
+	void overwriteFile(InputStream is, String oidcUserName, String pathToFile) throws IOException;
+	void createDir(String oidcUserName, String pathToFile) throws IOException;
+	void getContent(OutputStream fos, String oidcUserName, String pathToFile) throws IOException;
+	void delete(String oidcUserName, String pathToFile) throws IOException;
+	boolean checkPathExists(String oidcUserName, String pathToFile);
 	
 }

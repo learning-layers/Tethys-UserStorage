@@ -25,8 +25,8 @@ public class LocalStorageS implements StorageSI {
 	}
 
 	@Override
-	public void createFile(InputStream is, String username, String path) throws IOException {
-		Path filePath = new File(pathFinder(username, path)).toPath();
+	public void createFile(InputStream is, String oidcUserName, String pathToFile) throws IOException {
+		Path filePath = new File(pathFinder(oidcUserName, pathToFile)).toPath();
 			if(Files.notExists(filePath.getParent())) {
 				Files.createDirectories(filePath.getParent());
 			}
@@ -34,18 +34,18 @@ public class LocalStorageS implements StorageSI {
 	}
 
 	@Override
-	public void overwriteFile(InputStream is, String username, String path) throws IOException {
-			Files.copy(is, new File(pathFinder(username, path)).toPath(), StandardCopyOption.REPLACE_EXISTING);
+	public void overwriteFile(InputStream is, String oidcUserName, String pathToFile) throws IOException {
+			Files.copy(is, new File(pathFinder(oidcUserName, pathToFile)).toPath(), StandardCopyOption.REPLACE_EXISTING);
 	}
 
 	@Override
-	public void createDir(String username,String path) throws IOException {
-			Files.createDirectories(new File(pathFinder(username, path)).toPath());
+	public void createDir(String oidcUserName,String pathToFile) throws IOException {
+			Files.createDirectories(new File(pathFinder(oidcUserName, pathToFile)).toPath());
 	}
 
 	@Override
-	public void getContent(OutputStream fos, String username, String path) throws IOException {
-		final Path filePath = new File(pathFinder(username, path)).toPath();
+	public void getContent(OutputStream fos, String oidcUserName, String pathToFile) throws IOException {
+		final Path filePath = new File(pathFinder(oidcUserName, pathToFile)).toPath();
 		if(Files.isDirectory(filePath)){
 				BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(fos));
 				writer.write("{ Files : \n  [\n");
@@ -62,17 +62,17 @@ public class LocalStorageS implements StorageSI {
 	}
 
 	@Override
-	public void delete( String username, String path) throws IOException {
-			Files.delete(new File(pathFinder(username, path)).toPath());
+	public void delete( String oidcUserName, String pathToFile) throws IOException {
+			Files.delete(new File(pathFinder(oidcUserName, pathToFile)).toPath());
 	}
 
 	@Override
-	public boolean checkPathExists(String username, String path) {
-		return Files.exists(new File(pathFinder(username, path)).toPath());
+	public boolean checkPathExists(String oidcUserName, String pathToFile) {
+		return Files.exists(new File(pathFinder(oidcUserName, pathToFile)).toPath());
 	}
 	
-	private String pathFinder(String username, String path) {
-		return this.storageRootPath + "/" + username + "/" + path;
+	private String pathFinder(String oidcUserName, String pathToFile) {
+		return this.storageRootPath + "/" + oidcUserName + "/" + pathToFile;
 	}
 	
 }
