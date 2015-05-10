@@ -30,7 +30,7 @@ public class TethysBinder extends AbstractBinder {
 	ClientConfig clientConfig;
 	ResourceBundle configRB = ResourceBundle.getBundle("config");
 	ResourceBundle openstackRB = null;
-	ResourceBundle oidcRB = ResourceBundle.getBundle("oidc");
+	ResourceBundle oidcRB = null;
 
 	/* (non-Javadoc)
 	 * @see org.glassfish.hk2.utilities.binding.AbstractBinder#configure()
@@ -59,6 +59,7 @@ public class TethysBinder extends AbstractBinder {
 		switch(authVariable){
 			case "OIDC":
 				System.out.println("create OidcP");
+				oidcRB = ResourceBundle.getBundle("oidc");
 				WebTarget oidcWebTarget = ClientBuilder.newClient(clientConfig).target(oidcRB.getString("oidcURL"));
 				bind(WebResourceFactory.newResource(OidcP.class, oidcWebTarget)).to(OidcP.class);
 				break;

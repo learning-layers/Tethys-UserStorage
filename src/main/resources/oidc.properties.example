@@ -1,0 +1,7 @@
+oidcURL=http://localhost:8080/
+authorize = http://api.learning-layers.eu/o/oauth2/authorize
+token = TODO
+userinfo = TODO
+redirect = TODO
+clientid = ID
+clientsecret = SECRET
