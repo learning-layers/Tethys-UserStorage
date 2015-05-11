@@ -113,6 +113,7 @@ public class UserStorageR {
 	} )
 	public Response getUserRoot(@HeaderParam("Authorization") String accessToken, @PathParam("path") final String path) {
 		return getFiles(accessToken, path);
+		// TODO path can't be null or 406!
 	}
 	
 	/**
@@ -156,6 +157,8 @@ public class UserStorageR {
 				storageService.getContent(os, user.getName(), path);	
 			}
 		};
+		
+		//TODO doesn't look for file so can't get 404
 		return Response.ok(so).build();
 	}
 	

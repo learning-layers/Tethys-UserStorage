@@ -1,10 +1,13 @@
 package de.dbis.acis.cloud.Tethys.services.storage;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ResourceBundle;
 
 import javax.inject.Inject;
+
+import com.google.common.io.ByteStreams;
 
 import de.dbis.acis.cloud.Tethys.services.interfaces.StorageSI;
 import de.dbis.acis.cloud.Tethys.services.proxy.openstack.TempAuthP;
@@ -66,8 +69,10 @@ public class SwiftStorageS implements StorageSI{
 	 * @see de.dbis.acis.cloud.Tethys.services.interfaces.StorageSI#getContent(java.io.OutputStream, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public void getContent(OutputStream fos, String oidcUserName, String pathToFile) {
-		swiftP.getObjectContentAndMetadata(swiftTenantName, oidcUserName, pathToFile, token());
+	public void getContent(OutputStream fos, String oidcUserName, String pathToFile) throws IOException {
+		InputStream is = (InputStream) swiftP.getObjectContentAndMetadata(swiftTenantName, oidcUserName, pathToFile, token()).getEntity();
+		ByteStreams.copy(is, fos);
+		fos.flush();
 	}
 
 	/* (non-Javadoc)
