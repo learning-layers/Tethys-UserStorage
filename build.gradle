@@ -88,7 +88,7 @@ uploadArchives {
 processResources {
 	from('src/main/resources') {
 		include '*.properties'
-		filter(ReplaceTokens, tokens: ['swaggerWebApplicationName': ''])
+		filter(ReplaceTokens, tokens: ['swaggerWebApplicationName': 'Tethys-UserStorage'])
 		filter(ReplaceTokens, tokens: ['swaggerWebApplicationHost': 'localhost'])
 		filter(ReplaceTokens, tokens: ['swaggerWebApplicationPort': '8080'])
 	}
