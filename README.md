@@ -1,7 +1,7 @@
 #Tethys-UserStorage
 
 A microservice of the Tethys project handling users and their storage.
-For more information about Tethys & the contribution guidelines plz see [The Tethys Project on Github][tethys-github]
+For more information about Tethys & the contribution guidelines plz see [The Tethys Project on Github][tethys-github].
 
 ```
 Developed by
