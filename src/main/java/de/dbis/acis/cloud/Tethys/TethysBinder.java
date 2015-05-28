@@ -53,6 +53,8 @@ public class TethysBinder extends AbstractBinder {
 	
 	/**
 	 * Decides if we use OpenIDConnect or we mock it for test cases
+	 * OIDC: Uses the OIDCProxy to connect to the OIDC backends
+	 * MockOIDC: Mocks a class which always mocks a default OIDC user.
 	 * @param authVariable
 	 */
 	protected void chooseAuth(String authVariable){
