@@ -1,0 +1,3 @@
+tomcat_start =   ${TOMCAT_HOME}/bin/startup.sh
+tomcat_stop =    ${TOMCAT_HOME}/bin/shutdown.sh
+tomcat_webapps = ${TOMCAT_HOME}/webapps
