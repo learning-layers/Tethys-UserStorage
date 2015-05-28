@@ -13,9 +13,14 @@ import com.wordnik.swagger.jaxrs.config.DefaultJaxrsScanner;
 import com.wordnik.swagger.jaxrs.reader.DefaultJaxrsApiReader;
 import com.wordnik.swagger.reader.ClassReaders;
 
+/**
+ * This WebListener configures the Swagger part of this Web Application.
+ * Swagger helps exploring our API easily via a dynamic web frontend.
+ */
 @WebListener
 public class SwaggerJaxrsListener implements ServletContextListener {
 
+	//Gets the swagger configuration from the swagger.properties
 	ResourceBundle swaggerResourceBundle = ResourceBundle.getBundle("swagger");
 
 	@Override
