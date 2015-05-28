@@ -13,10 +13,10 @@ import org.gradle.api.file.FileCollection
 import org.apache.tools.ant.filters.ReplaceTokens
 
 task wrapper(type: Wrapper) {
-  gradleVersion = '2.3'
+  gradleVersion = '2.4'
 }
 
-sourceCompatibility = 1.7
+sourceCompatibility = 1.8
 
 buildscript {
     repositories {
