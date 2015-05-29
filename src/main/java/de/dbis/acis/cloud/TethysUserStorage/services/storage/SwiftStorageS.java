@@ -1,4 +1,4 @@
-package de.dbis.acis.cloud.Tethys.services.storage;
+package de.dbis.acis.cloud.TethysUserStorage.services.storage;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,9 +9,9 @@ import javax.inject.Inject;
 
 import com.google.common.io.ByteStreams;
 
-import de.dbis.acis.cloud.Tethys.services.interfaces.StorageSI;
-import de.dbis.acis.cloud.Tethys.services.proxy.openstack.TempAuthP;
-import de.dbis.acis.cloud.Tethys.services.proxy.openstack.swift.v1.SwiftP;
+import de.dbis.acis.cloud.TethysUserStorage.services.interfaces.StorageSI;
+import de.dbis.acis.cloud.TethysUserStorage.services.proxy.openstack.TempAuthP;
+import de.dbis.acis.cloud.TethysUserStorage.services.proxy.openstack.swift.v1.SwiftP;
 
 
 public class SwiftStorageS implements StorageSI{

@@ -1,4 +1,4 @@
-package de.dbis.acis.cloud.Tethys.resource;
+package de.dbis.acis.cloud.TethysUserStorage.resource;
 
 import java.io.IOException;
 import java.util.ResourceBundle;
@@ -19,9 +19,9 @@ import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiResponse;
 import com.wordnik.swagger.annotations.ApiResponses;
 
-import de.dbis.acis.cloud.Tethys.entity.LDAP.LDAPUserInfo;
-import de.dbis.acis.cloud.Tethys.services.interfaces.StorageSI;
-import de.dbis.acis.cloud.Tethys.services.proxy.oidc.OidcP;
+import de.dbis.acis.cloud.TethysUserStorage.entity.LDAP.LDAPUserInfo;
+import de.dbis.acis.cloud.TethysUserStorage.services.interfaces.StorageSI;
+import de.dbis.acis.cloud.TethysUserStorage.services.proxy.oidc.OidcP;
 
 /**
  * This SubResource matches the URL /i5Cloud/users

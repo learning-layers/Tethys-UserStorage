@@ -1,4 +1,4 @@
-package de.dbis.acis.cloud.Tethys.util;
+package de.dbis.acis.cloud.TethysUserStorage.util;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -1,4 +1,4 @@
-package de.dbis.acis.cloud.Tethys.services.proxy.oidc;
+package de.dbis.acis.cloud.TethysUserStorage.services.proxy.oidc;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;

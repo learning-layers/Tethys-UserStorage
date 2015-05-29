@@ -1,4 +1,4 @@
-package de.dbis.acis.cloud.Tethys.services.proxy.openstack.swift.v1;
+package de.dbis.acis.cloud.TethysUserStorage.services.proxy.openstack.swift.v1;
 
 import java.io.InputStream;
 
@@ -14,7 +14,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import de.dbis.acis.cloud.Tethys.util.COPY;
+import de.dbis.acis.cloud.TethysUserStorage.util.COPY;
 
 /**
  * JAX-RS annotated Interface for Openstack Swift. We will use it to generate Proxies.

@@ -1,11 +1,11 @@
-package de.dbis.acis.cloud.Tethys.services.proxy.oidc;
+package de.dbis.acis.cloud.TethysUserStorage.services.proxy.oidc;
 
 import java.util.ResourceBundle;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import de.dbis.acis.cloud.Tethys.entity.LDAP.LDAPUserInfo;
+import de.dbis.acis.cloud.TethysUserStorage.entity.LDAP.LDAPUserInfo;
 
 public class MockOidcP implements OidcP {
 

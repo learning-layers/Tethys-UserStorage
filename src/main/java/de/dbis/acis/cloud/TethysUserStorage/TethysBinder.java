@@ -1,4 +1,4 @@
-package de.dbis.acis.cloud.Tethys;
+package de.dbis.acis.cloud.TethysUserStorage;
 
 import java.util.ResourceBundle;
 
@@ -10,14 +10,14 @@ import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.proxy.WebResourceFactory;
 
-import de.dbis.acis.cloud.Tethys.services.interfaces.StorageSI;
-import de.dbis.acis.cloud.Tethys.services.proxy.oidc.MockOidcP;
-import de.dbis.acis.cloud.Tethys.services.proxy.oidc.OidcP;
-import de.dbis.acis.cloud.Tethys.services.proxy.openstack.TempAuthP;
-import de.dbis.acis.cloud.Tethys.services.proxy.openstack.swift.v1.SwiftP;
-import de.dbis.acis.cloud.Tethys.services.storage.LocalStorageS;
-import de.dbis.acis.cloud.Tethys.services.storage.SwiftStorageS;
-import de.dbis.acis.cloud.Tethys.util.GsonMessageBodyHandler;
+import de.dbis.acis.cloud.TethysUserStorage.services.interfaces.StorageSI;
+import de.dbis.acis.cloud.TethysUserStorage.services.proxy.oidc.MockOidcP;
+import de.dbis.acis.cloud.TethysUserStorage.services.proxy.oidc.OidcP;
+import de.dbis.acis.cloud.TethysUserStorage.services.proxy.openstack.TempAuthP;
+import de.dbis.acis.cloud.TethysUserStorage.services.proxy.openstack.swift.v1.SwiftP;
+import de.dbis.acis.cloud.TethysUserStorage.services.storage.LocalStorageS;
+import de.dbis.acis.cloud.TethysUserStorage.services.storage.SwiftStorageS;
+import de.dbis.acis.cloud.TethysUserStorage.util.GsonMessageBodyHandler;
 
 /**
  * HK2 Binding class. Which binds classes for Dependency Injection(DI).

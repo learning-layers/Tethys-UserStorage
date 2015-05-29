@@ -1,4 +1,4 @@
-package de.dbis.acis.cloud.Tethys.services.proxy.openstack;
+package de.dbis.acis.cloud.TethysUserStorage.services.proxy.openstack;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;

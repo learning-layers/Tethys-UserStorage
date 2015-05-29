@@ -1,4 +1,4 @@
-package de.dbis.acis.cloud.Tethys.entity.LDAP;
+package de.dbis.acis.cloud.TethysUserStorage.entity.LDAP;
 
 public class LDAPUserInfo {
 

@@ -1,4 +1,4 @@
-package de.dbis.acis.cloud.Tethys;
+package de.dbis.acis.cloud.TethysUserStorage;
 
 import java.util.ResourceBundle;
 

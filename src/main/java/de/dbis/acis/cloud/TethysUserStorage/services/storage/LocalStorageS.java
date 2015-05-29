@@ -1,4 +1,4 @@
-package de.dbis.acis.cloud.Tethys.services.storage;
+package de.dbis.acis.cloud.TethysUserStorage.services.storage;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -12,7 +12,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.ResourceBundle;
 
-import de.dbis.acis.cloud.Tethys.services.interfaces.StorageSI;
+import de.dbis.acis.cloud.TethysUserStorage.services.interfaces.StorageSI;
 
 public class LocalStorageS implements StorageSI {
 	

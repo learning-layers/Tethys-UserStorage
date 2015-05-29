@@ -1,4 +1,4 @@
-package de.dbis.acis.cloud.Tethys.services.interfaces;
+package de.dbis.acis.cloud.TethysUserStorage.services.interfaces;
 
 import java.io.IOException;
 import java.io.InputStream;
