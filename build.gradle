@@ -16,8 +16,9 @@ task wrapper(type: Wrapper) {
   gradleVersion = '2.4'
 }
 
+//Jenkins seems to not have Java8... still we use Java8 everywhere else!
 sourceCompatibility = 1.7
-targetCompatibility = 1.8
+targetCompatibility = 1.7
 
 buildscript {
     repositories {
