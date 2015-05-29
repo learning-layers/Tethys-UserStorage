@@ -94,17 +94,16 @@ processResources {
 	}
 }
 
-
 task stop(type: Exec) {
-    commandLine "$tomcat_stop"
+    commandLine "${System.env.TOMCAT_HOME}/bin/startup.sh"
 }
 
 task start(type: Exec) {
-	commandLine "$tomcat_start"
+	commandLine "${System.env.TOMCAT_HOME}/bin/shutdown.sh"
 }
 
 task deploy(type: Copy) {
 	dependsOn assemble, war
 	from war
-	into tomcat_webapps
+	into "${System.env.TOMCAT_HOME}/webapps"
 }
