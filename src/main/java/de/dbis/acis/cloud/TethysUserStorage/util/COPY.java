@@ -8,8 +8,10 @@ import java.lang.annotation.Target;
 import javax.ws.rs.HttpMethod;
 
 /**
- * Indicates that the annotated method responds to HTTP GET requests
+ * Indicates that the annotated method responds to HTTP COPY requests
  * @see HttpMethod
+ * 
+ * @author Gordon Lawrenz <lawrenz@dbis.rwth-aachen.de>
  */
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)

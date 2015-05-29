@@ -24,19 +24,25 @@ import de.dbis.acis.cloud.TethysUserStorage.services.interfaces.StorageSI;
 import de.dbis.acis.cloud.TethysUserStorage.services.proxy.oidc.OidcP;
 
 /**
- * This SubResource matches the URL /i5Cloud/users
+ * This Resource matches the URL .../users
  * 
  * @author Gordon Lawrenz <lawrenz@dbis.rwth-aachen.de>
  */
 @Path("/users")
-@Api(value="/users", description = "Operations about users", position = 3)
+@Api(value="/users", description = "Users Resource", position = 1)
 public class UsersR {
 
+	/**
+	 * Gets configuration from properties file.
+	 */
 	private ResourceBundle configRB = ResourceBundle.getBundle("config");
 	private StorageSI storageService;
 	private OidcP oidcP;
 	
 	/**
+	 * Constructor of the UsersResource
+	 * Uses Dependency Injection
+	 * 
 	 * @param storageService
 	 * @param oidcP
 	 */
@@ -47,13 +53,15 @@ public class UsersR {
 	}
 	
 	/**
+	 * Verifies an accessToken
+	 * 
 	 * @param accessToken
 	 * @return
 	 */
 	@GET
 	@Path("/oauth")
 	@Produces(MediaType.APPLICATION_JSON)
-	@ApiOperation(value="Method in Testing - Verify LDAP Access")
+	@ApiOperation(value="Verifies an accessToken.")
 	@ApiResponses( {
 		@ApiResponse(code = 200, message = "OK")
 	} )
@@ -74,14 +82,22 @@ public class UsersR {
 		
 	}
 	
+	/**
+	 * Creates a Container for OIDC User
+	 * 
+	 * @param userName
+	 * @param adminToken
+	 * @return
+	 * @throws IOException
+	 */
 	@POST
 	@Path("/{userName}")
-	@ApiOperation(value="Creates User with LDAP User Data")
+	@ApiOperation(value="Creates a Container for OIDC User.")
 	@ApiResponses( {
 		@ApiResponse(code = 201, message = "Created"),
 		@ApiResponse(code = 202, message = "Accepted")
 	} )
-	public Response createStorage(@PathParam("userName") String userName, @HeaderParam("X-Admin-Token") String adminToken) throws IOException{
+	public Response createContainer(@PathParam("userName") String userName, @HeaderParam("X-Admin-Token") String adminToken) throws IOException{
 		
 		if(adminToken == null || !adminToken.equals(configRB.getString("adminToken"))) {
 			return Response.status(Status.UNAUTHORIZED).build();

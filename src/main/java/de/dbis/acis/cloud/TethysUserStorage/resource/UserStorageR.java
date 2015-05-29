@@ -31,18 +31,21 @@ import de.dbis.acis.cloud.TethysUserStorage.services.proxy.oidc.OidcP;
 
 
 /**
- * This Resource matches the URL /Tethys/users/{sub}
+ * This Resource matches the URL .../users/storage
  * 
  * @author Gordon Lawrenz <lawrenz@dbis.rwth-aachen.de> *
  */
 @Path("/users/storage")
-@Api(value="/users/storage", description = "User storage ")
+@Api(value="/users/storage", description = "User storage resource.")
 public class UserStorageR {
 	
 	private StorageSI storageService;
 	private OidcP oidcP;
 	
 	/**
+	 * Constructor of the UserStorageResource
+	 * Uses Dependency Injection
+	 * 
 	 * @param storageService
 	 * @param oidcP
 	 */
@@ -53,6 +56,8 @@ public class UserStorageR {
 	}
 	
 	/**
+	 * Creates a file or a directory with given path
+	 * 
 	 * @param accessToken
 	 * @param path
 	 * @param is
@@ -62,7 +67,7 @@ public class UserStorageR {
 	@POST
 	@Path("/{path : .+}")
 	@Consumes( { MediaType.MULTIPART_FORM_DATA, MediaType.APPLICATION_FORM_URLENCODED } )
-	@ApiOperation(value="posts file/substorage with specified pat")
+	@ApiOperation(value="posts file or directory with given path.")
 	@ApiResponses( {
 		@ApiResponse(code = 200, message = "OK")
 	} )
@@ -99,33 +104,55 @@ public class UserStorageR {
 	}
 	
 	/**
+	 * Get a list of all files or directories in the root of the container of a user.
+	 * 
 	 * @param accessToken
-	 * @param path
 	 * @return
-	 * @throws ClassNotFoundException
-	 * @throws IOException
 	 */
 	@GET
-	@Path("/{path : .*}")
-	@ApiOperation(value="Get a list of all files in a sub-storage or a file with specified path")
+	@Path("/")
+	@ApiOperation(value="Get a list of all files or directories in the root of the container of a user.")
 	@ApiResponses( {
 		@ApiResponse(code = 200, message = "OK")
 	} )
-	public Response getUserRoot(@HeaderParam("Authorization") String accessToken, @PathParam("path") final String path) {
-		return getFiles(accessToken, path);
-		// TODO path can't be null or 406!
+	public Response getUserRoot(@HeaderParam("Authorization") String accessToken) {
+		StreamingOutput so = null;
+		
+		if(accessToken == null || accessToken.isEmpty()) {
+			return Response.status(Status.UNAUTHORIZED).build();
+		}
+		
+		Response proxyResponse = oidcP.verifyAccessToken(accessToken);
+		if(proxyResponse.getStatusInfo()!=Status.OK) {
+			return proxyResponse;
+		}
+		
+		final LDAPUserInfo user = (LDAPUserInfo) proxyResponse.getEntity();
+		
+		//go further and read dir/file
+		so = new StreamingOutput(){
+
+			@Override
+			public void write(OutputStream os) throws IOException,
+					WebApplicationException {
+				storageService.getContent(os, user.getName(), "");	
+			}
+		};
+		
+		//TODO doesn't look for file so can't get 404
+		return Response.ok(so).build();
 	}
 	
 	/**
+	 * Get or a file a list of all files or directories in a directory in the container of a user found under given path
 	 * @param accessToken
 	 * @param path
 	 * @return
 	 * @throws ClassNotFoundException
-	 * @throws IOException
 	 */
 	@GET
 	@Path("/{path : .+}")
-	@ApiOperation(value="Get a list of all files in a sub-storage or a file with specified path")
+	@ApiOperation(value="Gets a file or a list of all files or directories in a directory in the container of a user found under given path.")
 	@ApiResponses( {
 		@ApiResponse(code = 200, message = "OK")
 	} )
@@ -163,6 +190,8 @@ public class UserStorageR {
 	}
 	
 	/**
+	 * Creates and/or overwrites a file with given path.
+	 * 
 	 * @param path
 	 * @param is
 	 * @return
@@ -171,7 +200,7 @@ public class UserStorageR {
 	@PUT
 	@Path("/{path : .+}")
 	@Consumes( { MediaType.MULTIPART_FORM_DATA, MediaType.APPLICATION_FORM_URLENCODED } )
-	@ApiOperation(value="puts file/substorage with specified pat")
+	@ApiOperation(value="Puts file with given path.")
 	@ApiResponses( {
 		@ApiResponse(code = 200, message = "OK")
 	} )
@@ -197,6 +226,8 @@ public class UserStorageR {
 	
 	
 	/**
+	 * Deletes a file found under given path.
+	 * 
 	 * @param accessToken
 	 * @param path
 	 * @return
@@ -204,7 +235,7 @@ public class UserStorageR {
 	 */
 	@DELETE
 	@Path("/{path : .+}")
-	@ApiOperation(value="deletes files or dir")
+	@ApiOperation(value="Deletes a file found under given path.")
 	@ApiResponses( {
 		@ApiResponse(code = 200, message = "OK")
 	} )
@@ -230,6 +261,12 @@ public class UserStorageR {
 	}
 	
 	
+	/**
+	 * Should verify if the specified path is consistent. Maybe we will do this later with annotations!?
+	 * 
+	 * @param Path
+	 * @return
+	 */
 	@SuppressWarnings("unused")
 	private boolean checkPath(String Path){
 		

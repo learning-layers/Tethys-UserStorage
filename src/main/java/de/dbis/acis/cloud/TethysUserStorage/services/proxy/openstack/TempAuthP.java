@@ -7,6 +7,11 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+/**
+ * Interface to create proxies for openstacks tempauth API
+ * 
+ * @author Gordon Lawrenz <lawrenz@dbis.rwth-aachen.de>
+ */
 @Path("/")
 public interface TempAuthP {
 	

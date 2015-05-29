@@ -9,13 +9,16 @@ import org.glassfish.jersey.server.ServerProperties;
 import de.dbis.acis.cloud.TethysUserStorage.util.InjectionBinder;
 
 /**
- * Deployment class for a JAX-RS (Jersey) application with Servlet 3.0.
+ * Deployment class for a JAX-RS 2.0 (Jersey) application with Servlet 3.0.
  * 
  * @author Gordon Lawrenz <lawrenz@dbis.rwth-aachen.de>
  */
 @ApplicationPath("/*")
 public class WebApplication extends ResourceConfig {
 
+	/**
+	 * Constructor of our WebApplication.
+	 */
 	public WebApplication() {
 		System.out.println("TethysUserStorage starts...");
 		packages("de.dbis.acis.cloud.TethysUserStorage.resource");
@@ -36,6 +39,7 @@ public class WebApplication extends ResourceConfig {
 		System.out.println("TethysUserStorage started!");
 		System.out.println("");
 	}
+	
 }
 
 

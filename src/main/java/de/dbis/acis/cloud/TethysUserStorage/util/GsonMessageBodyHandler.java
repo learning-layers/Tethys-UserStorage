@@ -22,6 +22,8 @@ import com.google.gson.GsonBuilder;
 
 /**
  * A MessageBodyHandler to serialize and deserialize Gsons.
+ * 
+ * @author Gordon Lawrenz <lawrenz@dbis.rwth-aachen.de>
  */
 @Provider
 @Produces(MediaType.APPLICATION_JSON)
@@ -87,22 +89,6 @@ public final class GsonMessageBodyHandler implements MessageBodyWriter<Object>, 
   public long getSize(Object object, Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
     return -1;
   }
- 
-//  @Override
-//  public void writeTo(Object object, Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType, MultivaluedMap<String, Object> httpHeaders, OutputStream entityStream) throws IOException, WebApplicationException {
-//    OutputStreamWriter writer = new OutputStreamWriter(entityStream, UTF_8);
-//    try {
-//      Type jsonType;
-//      if (type.equals(genericType)) {
-//        jsonType = type;
-//      } else {
-//        jsonType = genericType;
-//      }
-//      entityStream.write(getGson().toJson(object).getBytes("UTF-8"));//, jsonType, writer);
-//    } finally {
-//      writer.close();
-//    }
-//  }
   
   /**
    * Write a type to an HTTP response.

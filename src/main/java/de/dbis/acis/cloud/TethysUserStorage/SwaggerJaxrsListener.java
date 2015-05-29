@@ -16,6 +16,8 @@ import com.wordnik.swagger.reader.ClassReaders;
 /**
  * This WebListener configures the Swagger part of this Web Application.
  * Swagger helps exploring our API easily via a dynamic web frontend.
+ * 
+ * @author Gordon Lawrenz <lawrenz@dbis.rwth-aachen.de>
  */
 @WebListener
 public class SwaggerJaxrsListener implements ServletContextListener {
@@ -23,6 +25,9 @@ public class SwaggerJaxrsListener implements ServletContextListener {
 	//Gets the swagger configuration from the swagger.properties
 	ResourceBundle swaggerResourceBundle = ResourceBundle.getBundle("swagger");
 
+	/* (non-Javadoc)
+	 * @see javax.servlet.ServletContextListener#contextInitialized(javax.servlet.ServletContextEvent)
+	 */
 	@Override
 	public void contextInitialized(ServletContextEvent sce) {
 		System.out.println("Swagger starts...");
@@ -40,6 +45,9 @@ public class SwaggerJaxrsListener implements ServletContextListener {
 		System.out.println("");
 	}
 
+	/* (non-Javadoc)
+	 * @see javax.servlet.ServletContextListener#contextDestroyed(javax.servlet.ServletContextEvent)
+	 */
 	@Override
 	public void contextDestroyed(ServletContextEvent sce) {
 		System.out.println("Swagger destroyed");

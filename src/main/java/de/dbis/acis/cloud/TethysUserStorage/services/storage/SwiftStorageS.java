@@ -13,9 +13,16 @@ import de.dbis.acis.cloud.TethysUserStorage.services.interfaces.StorageSI;
 import de.dbis.acis.cloud.TethysUserStorage.services.proxy.openstack.TempAuthP;
 import de.dbis.acis.cloud.TethysUserStorage.services.proxy.openstack.swift.v1.SwiftP;
 
-
+/**
+ * Implementation of the StorageServiceInterface to store data in openstack swift.
+ * 
+ * @author Gordon Lawrenz <lawrenz@dbis.rwth-aachen.de>
+ */
 public class SwiftStorageS implements StorageSI{
 	
+	/**
+	 * Gets openstack configuration from properties file.
+	 */
 	ResourceBundle openstackRB = ResourceBundle.getBundle("openstack");
 	
 	private String swiftTenantName;
@@ -25,6 +32,9 @@ public class SwiftStorageS implements StorageSI{
 	private TempAuthP tempAuthP;
 	
 	/**
+	 * Constructor of the SwiftStorageService
+	 * Uses Dependency Injection
+	 * 
 	 * @param swiftP
 	 * @param tempAuthP
 	 */
@@ -70,7 +80,12 @@ public class SwiftStorageS implements StorageSI{
 	 */
 	@Override
 	public void getContent(OutputStream fos, String oidcUserName, String pathToFile) throws IOException {
-		InputStream is = (InputStream) swiftP.getObjectContentAndMetadata(swiftTenantName, oidcUserName, pathToFile, token()).getEntity();
+		InputStream is = null;
+		if(pathToFile.equals("")) {
+			is = (InputStream) swiftP.getContainerDetailsAndListObjects(swiftTenantName, oidcUserName, token()).getEntity();
+		} else {
+			is = (InputStream) swiftP.getObjectContentAndMetadata(swiftTenantName, oidcUserName, pathToFile, token()).getEntity();
+		}
 		ByteStreams.copy(is, fos);
 		fos.flush();
 	}
@@ -93,6 +108,7 @@ public class SwiftStorageS implements StorageSI{
 	}
 
 	/**
+	 * Helps to get a token everytime a request was send. We should cache this later!
 	 * @return
 	 */
 	private String token() {

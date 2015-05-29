@@ -12,25 +12,30 @@ import javax.servlet.annotation.WebListener;
 
 import com.mysql.jdbc.AbandonedConnectionCleanupThread;
 
-
 /**
  * This class is here to prevent a memory leak, because tomcat can't stop them jdbc-thread(mysqlconnection).
+ * 
+ * @author Gordon Lawrenz <lawrenz@dbis.rwth-aachen.de>
  */
 @WebListener
 public class ContainerContextClosedHandler implements ServletContextListener {
     //private static final Logger logger = Logger.getLogger(ContainerContextClosedHandler.class.getName());
 
-	/**
-	 * Does nothing.
-	 */
+	/* (non-Javadoc)
+	 * Initializes the Container Context.
+	 * 
+     * @see javax.servlet.ServletContextListener#contextInitialized(javax.servlet.ServletContextEvent)
+     */
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
-        // nothing to do
+        // nothing to do here
     	System.out.println("Initialize Container Context");
     }
 
-    /**
-     * To Clean up.
+    /* (non-Javadoc)
+     * Clean up at destroy
+     * 
+     * @see javax.servlet.ServletContextListener#contextDestroyed(javax.servlet.ServletContextEvent)
      */
     @Override
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
