@@ -6,19 +6,21 @@ import org.glassfish.jersey.filter.LoggingFilter;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.ServerProperties;
 
+import de.dbis.acis.cloud.TethysUserStorage.util.InjectionBinder;
+
 /**
  * Deployment class for a JAX-RS (Jersey) application with Servlet 3.0.
  * 
  * @author Gordon Lawrenz <lawrenz@dbis.rwth-aachen.de>
  */
 @ApplicationPath("/*")
-public class TethysApplication extends ResourceConfig {
+public class WebApplication extends ResourceConfig {
 
-	public TethysApplication() {
+	public WebApplication() {
 		System.out.println("TethysUserStorage starts...");
 		packages("de.dbis.acis.cloud.TethysUserStorage.resource");
 		packages("de.dbis.acis.cloud.TethysUserStorage.services.storage");
-		register(new TethysBinder());
+		register(new InjectionBinder());
 		register(de.dbis.acis.cloud.TethysUserStorage.util.GsonMessageBodyHandler.class);
 		register(de.dbis.acis.cloud.TethysUserStorage.util.CORSFilter.class);
 		register(de.dbis.acis.cloud.TethysUserStorage.util.ContainerContextClosedHandler.class);

@@ -1,4 +1,4 @@
-package de.dbis.acis.cloud.TethysUserStorage;
+package de.dbis.acis.cloud.TethysUserStorage.util;
 
 import java.util.ResourceBundle;
 
@@ -17,7 +17,6 @@ import de.dbis.acis.cloud.TethysUserStorage.services.proxy.openstack.TempAuthP;
 import de.dbis.acis.cloud.TethysUserStorage.services.proxy.openstack.swift.v1.SwiftP;
 import de.dbis.acis.cloud.TethysUserStorage.services.storage.LocalStorageS;
 import de.dbis.acis.cloud.TethysUserStorage.services.storage.SwiftStorageS;
-import de.dbis.acis.cloud.TethysUserStorage.util.GsonMessageBodyHandler;
 
 /**
  * HK2 Binding class. Which binds classes for Dependency Injection(DI).
@@ -25,7 +24,7 @@ import de.dbis.acis.cloud.TethysUserStorage.util.GsonMessageBodyHandler;
  * 
  * @author Gordon Lawrenz <lawrenz@dbis.rwth-aachen.de>
  */
-public class TethysBinder extends AbstractBinder {
+public class InjectionBinder extends AbstractBinder {
 	
 	ClientConfig clientConfig;
 	ResourceBundle configRB = ResourceBundle.getBundle("config");
